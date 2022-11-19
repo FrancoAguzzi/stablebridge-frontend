@@ -172,9 +172,6 @@ export const OnRampPage: NextPage = () => {
                     {rampToken} {amountValue - networkGas - processingFee}
                   </p>
                 )}
-                <p className="text-slate-500 ml-2">
-                  {getChainInfo(originChain)?.nativeCurrency.symbol}
-                </p>
               </div>
             </div>
             {!hideTransactionDetails && (
