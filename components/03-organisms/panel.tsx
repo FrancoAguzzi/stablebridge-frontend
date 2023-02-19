@@ -37,10 +37,12 @@ export const Panel = () => {
       dispatch(setShow(false));
       dispatch(setStep(4));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [panelStep, showPanel]);
 
   useEffect(() => {
     checkValidSubmit();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [originChain, originToken, destinyChain, destinyToken]);
 
   const getCurrentStepPanel = () => {

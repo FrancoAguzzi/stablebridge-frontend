@@ -99,6 +99,7 @@ export const OnRampPage: NextPage = () => {
     }, 1000);
 
     return () => clearInterval(intervalId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [seconds]);
 
   return (

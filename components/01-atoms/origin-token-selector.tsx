@@ -30,10 +30,12 @@ export const OriginTokenSelector = () => {
 
   useEffect(() => {
     getSelectedTokenInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOriginTokenId]);
 
   useEffect(() => {
     getSelectedTokenInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

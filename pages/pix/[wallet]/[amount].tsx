@@ -39,7 +39,7 @@ export const PixPage: NextPage = () => {
 
       <main className="relative bg-white px-4 py-6 rounded-[40px] shadow-custom">
         <h1 className="text-gray-800 text-center text-lg">
-          It's in your hands now!
+          It&apos;s in your hands now!
         </h1>
         <p className="text-sm text-gray-600 text-center mt-2 mx-8">
           Once you finish PIX payment, {router.query.amount} SBRLs will be added

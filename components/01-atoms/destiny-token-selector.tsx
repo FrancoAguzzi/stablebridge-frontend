@@ -32,10 +32,12 @@ export const DestinyTokenSelector = () => {
 
   useEffect(() => {
     getSelectedTokenInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDestinyTokenId]);
 
   useEffect(() => {
     getSelectedTokenInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

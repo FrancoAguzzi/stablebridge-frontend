@@ -36,10 +36,12 @@ export const DestinyChainSelector = () => {
 
   useEffect(() => {
     getSelectedChainInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDestinyChainId]);
 
   useEffect(() => {
     getSelectedChainInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

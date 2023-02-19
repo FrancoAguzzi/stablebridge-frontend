@@ -66,6 +66,7 @@ export const ConnectWalletCta = () => {
         dispatch(setOriginChain(newChain));
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId]);
 
   return (

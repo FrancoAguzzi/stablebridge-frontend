@@ -56,7 +56,7 @@ export const ChainsList = ({ isOrigin = false }: ChainsListProps) => {
 
     if (showOnlyTestnets) {
       list = supportedChains.filter((chain: any) =>
-        testnetChainIds.includes(chain.chainId)
+        testnetChainIds.includes(chain.chainId as never)
       );
     } else {
       list = supportedChains.filter((chain: any) =>
@@ -68,10 +68,12 @@ export const ChainsList = ({ isOrigin = false }: ChainsListProps) => {
 
   useEffect(() => {
     updateShownChains();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     updateShownChains();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showOnlyTestnets]);
 
   return (

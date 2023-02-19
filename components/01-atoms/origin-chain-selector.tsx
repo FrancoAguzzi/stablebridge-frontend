@@ -34,10 +34,12 @@ export const OriginChainSelector = () => {
 
   useEffect(() => {
     getSelectedChainInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOriginChainId]);
 
   useEffect(() => {
     getSelectedChainInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
