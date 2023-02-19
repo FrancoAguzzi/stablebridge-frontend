@@ -28,7 +28,7 @@ export const Home: NextPage = () => {
           <h1 className="mb-2 text-3xl w-full font-medium">Transparent</h1>
           <p className="text-gray-800 text-sm mb-2">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis autem
-            quasi sed minus magnam aut amet ex?
+            quasi sed minus magnam aut?
           </p>
           <div className="grid gap-4 grid-cols-2">
             <RedirectToCta
