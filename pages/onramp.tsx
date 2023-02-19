@@ -3,22 +3,26 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { ChainsSelector, Skeleton, TheHeader } from "../components/01-atoms";
+import {
+  ChainSelectorOptions,
+  ChainsSelector,
+  Skeleton,
+  TheHeader,
+} from "../components/01-atoms";
 import { getChainInfo } from "../constants/chainInfo";
 import { setAmount, setPixData } from "../store/rampInfoSlice";
 import { getEstimatedGasFee } from "../utils";
 
 import { useRouter } from "next/router";
+import { toast } from "react-hot-toast";
 
 const TIMEOUT_SECONDS = 10;
 
 export const OnRampPage: NextPage = () => {
-  const originChain = useSelector(
-    (state: any) => state.originTransactionInfo.chain
-  );
   const amountValue = useSelector((state: any) => state.rampInfo.amount);
   const rampChain = useSelector((state: any) => state.rampInfo.chain);
   const rampToken = useSelector((state: any) => state.rampInfo.token);
+  const account = useSelector((state: any) => state.account.address);
   const dispatch = useDispatch();
 
   const [processingFee, setProcessingFee] = useState(0);
@@ -36,27 +40,34 @@ export const OnRampPage: NextPage = () => {
   };
 
   const validateOnRamp = async () => {
-    if (!!amountValue && rampChain && rampToken) {
-      const myHeaders = new Headers();
+    if (!!amountValue && rampChain && rampToken && account) {
+      // PIX API: integration needed
+      // const myHeaders = new Headers();
 
-      myHeaders.append("Content-Type", "application/json");
+      // myHeaders.append("Content-Type", "application/json");
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pix`, {
-        method: "POST",
-        headers: myHeaders,
-        body: JSON.stringify({
-          networkId: rampChain,
-          token: rampToken,
-          amount: amountValue,
-        }),
+      // const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pix`, {
+      //   method: "POST",
+      //   headers: myHeaders,
+      //   body: JSON.stringify({
+      //     networkId: rampChain,
+      //     token: rampToken,
+      //     amount: amountValue,
+      //   }),
+      // });
+      // const data = await res.json();
+
+      // if (data["qr_code_base64"]) {
+      //   router.push(`/pix/${data["qr_code_base64"]}`);
+
+      //   dispatch(setPixData(data));
+      // }
+      router.push({
+        pathname: "/pix/[wallet]/[amount]",
+        query: { wallet: account, amount: amountValue },
       });
-      const data = await res.json();
-
-      if (data["qr_code_base64"]) {
-        router.push(`/pix/${data["qr_code_base64"]}`);
-
-        dispatch(setPixData(data));
-      }
+    } else {
+      toast.error("Connect your account first");
     }
   };
 
@@ -71,7 +82,8 @@ export const OnRampPage: NextPage = () => {
     if (seconds === 0) {
       setSeconds(null);
       getEstimatedGasFee(rampChain, rampToken, amountValue)
-        .then(() => {
+        .then((res) => {
+          console.log(res);
           setIsLoadingEstimates(true);
         })
         .finally(() => {
@@ -90,7 +102,7 @@ export const OnRampPage: NextPage = () => {
   }, [seconds]);
 
   return (
-    <div className="max-w-md m-auto pb-10 min-h-[800px]">
+    <div className="max-w-md m-auto pb-32 min-h-[800px]">
       <Head>
         <title>StableBridge - Bridge tokens between blockchains</title>
         <meta name="description" content="Bridge tokens between blockchains" />
@@ -104,7 +116,7 @@ export const OnRampPage: NextPage = () => {
           <p className="flex-1 bg-blue rounded-3xl text-white text-base py-1.5 select-none">
             BUY
           </p>
-          <p className="flex-1 py-1.5 select-none">SELL</p>
+          {/* <p className="flex-1 py-1.5 select-none">SELL</p> */}
         </div>
         <div className="bg-cream border-[1px] rounded-3xl p-6 py-4 mt-4 mb-4">
           <p className="mb-2 text-sm font-medium">Token</p>
@@ -125,7 +137,7 @@ export const OnRampPage: NextPage = () => {
           >
             <p className="text-gray-400">Network</p>
             <p>
-              {getChainInfo(rampChain)?.label
+              {rampChain
                 ? getChainInfo(rampChain)?.label
                 : "Select destiny network"}
             </p>
@@ -133,6 +145,7 @@ export const OnRampPage: NextPage = () => {
 
           {showChainSelector && (
             <ChainsSelector
+              parent={ChainSelectorOptions.ONRAMP}
               onSelection={() => setShowChainSelector(!showChainSelector)}
             />
           )}
@@ -159,7 +172,7 @@ export const OnRampPage: NextPage = () => {
           </div>
         </div>
         {amountValue && (
-          <div className="rounded-3xl border-[1px] bg-gray-1 p-6 mt-4">
+          <div className="rounded-3xl border-[1px] bg-gray-1 p-6 my-4">
             <div className="border-b-[1px]">
               <p className="text-sm font-medium mb-4">
                 You will receive approximately
@@ -213,7 +226,7 @@ export const OnRampPage: NextPage = () => {
               onClick={validateOnRamp}
               className="w-full bg-black rounded-2xl text-white p-4 mt-8 hover:animate-pulse"
             >
-              Submit order
+              Continue
             </button>
           </div>
         )}

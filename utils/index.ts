@@ -1,5 +1,5 @@
 import { Contract, ethers, Signer } from "ethers";
-import { abi } from "./abi";
+import { sbrlAbi, stakeContractAbi } from "./abi";
 import {
   ChainType,
   SupportedChainId,
@@ -9,6 +9,7 @@ import { FALLBACK_URLS, RPC_URLS } from "../constants/networks";
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { getChainInfo } from "../constants/chainInfo";
 
+const STAKE_CONTRACT_ADDRESS = "0xb5eE0C18eEB5745aa84a593b247bb627f147fc0a";
 declare global {
   interface Window {
     ethereum?: any;
@@ -82,22 +83,82 @@ export const switchNetwork = async (chainId: number) => {
 //   changeNetwork(SupportedChainId.MAINNET);
 // };
 
-export const getSBRLAmount = async (chainId: number) => {
-  const ethereum = (window as any).ethereum;
-  const accounts = await ethereum.request({
-    method: "eth_requestAccounts",
-  });
+export const stakeAmount = async (amount: number) => {
+  try {
+    const ethereum = (window as any).ethereum;
+    const accounts = await ethereum.request({
+      method: "eth_requestAccounts",
+    });
 
-  const walletAddress = accounts[0];
-  const address = getChainInfo(chainId).stableBridgeContractAddress;
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = await provider.getSigner(walletAddress);
-  const contract = new Contract(address, abi, signer);
-  const balance = await contract.balanceOf(walletAddress);
-  const balanceFormatted = ethers.utils.formatUnits(balance, 6);
+    const walletAddress = accounts[0];
 
-  alert(balanceFormatted.toString());
-  return balanceFormatted;
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = await provider.getSigner(walletAddress);
+
+    const contract = new Contract(
+      STAKE_CONTRACT_ADDRESS,
+      stakeContractAbi,
+      signer
+    );
+
+    approveSbrl(250, amount);
+
+    const result = await contract.stake(amount * 10e18);
+
+    return result;
+  } catch (e) {
+    return e;
+  }
+};
+
+export const approveSbrl = async (
+  chainId: number | undefined,
+  amount: number
+) => {
+  if (chainId) {
+    const ethereum = (window as any).ethereum;
+    const accounts = await ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    try {
+      const walletAddress = accounts[0];
+      const address = getChainInfo(chainId)?.stableBridgeContractAddress;
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = await provider.getSigner(walletAddress);
+      const contract = new Contract(address, sbrlAbi, signer);
+
+      const approve = await contract.approve(STAKE_CONTRACT_ADDRESS, amount);
+
+      return approve;
+    } catch (e) {
+      console.error(e);
+      return "Failed to approve";
+    }
+  }
+};
+
+export const getSBRLAmount = async (chainId: number | undefined) => {
+  if (chainId) {
+    const ethereum = (window as any).ethereum;
+    const accounts = await ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    try {
+      const walletAddress = accounts[0];
+      const address = getChainInfo(chainId)?.stableBridgeContractAddress;
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = await provider.getSigner(walletAddress);
+      const contract = new Contract(address, sbrlAbi, signer);
+
+      const balance = await contract.balanceOf(walletAddress);
+      const balanceFormatted = ethers.utils.formatUnits(balance, 6);
+
+      return balanceFormatted;
+    } catch (e) {
+      console.error(e);
+      return null;
+    }
+  }
 };
 
 // export const listenToPayment = async () => {
@@ -185,7 +246,7 @@ export const getEstimatedGasFee = async (
 //   const provider = new ethers.providers.Web3Provider(ethereum);
 //   const walletAddress = accounts[0]; // first account in MetaMask
 //   const signer = provider.getSigner(walletAddress);
-//   const contract = new ethers.Contract(contractAddress, abi, signer);
+//   const contract = new ethers.Contract(contractAddress, sbrlAbi, signer);
 
 //   const numberOfDecimals = 6;
 //   const numberOfTokens = ethers.utils.parseUnits(amount, numberOfDecimals);

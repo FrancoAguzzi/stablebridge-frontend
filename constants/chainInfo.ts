@@ -17,14 +17,14 @@ const CHAIN_INFO: any = {
     label: "Fantom",
     logoUrl: fantomLogo,
     nativeCurrency: { name: "Fantom", symbol: "FTM", decimals: 18 },
-    stableBridgeContractAddress: "",
+    stableBridgeContractAddress: "0x6Cec7A87c83a18a197155ef6A5D43998B391B66D",
   },
   [SupportedChainId.GOERLI]: {
     chainId: 5,
     label: "Goerli",
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: "Goerli Ether", symbol: "gETH", decimals: 18 },
-    stableBridgeContractAddress: "",
+    stableBridgeContractAddress: "0x40eFfEaB1A6f68E42c462cEc77f35b8525528345",
   },
   [SupportedChainId.POLYGON]: {
     chainId: 137,

@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const originTransactionInfo = createSlice({
   name: "originTransactionInfo",
   initialState: {
-    chain: "",
+    chain: "5",
     token: 1,
   },
   reducers: {

@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 export const accountSlice = createSlice({
   name: "account",
   initialState: {
-    address: "0x",
-    balance: null,
+    address: "",
+    balance: 200,
   },
   reducers: {
     setBalance: (state, action) => {

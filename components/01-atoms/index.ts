@@ -7,3 +7,4 @@ export * from "./origin-token-selector";
 export * from "./redirect-to-cta";
 export * from "./bridge-tokens-cta";
 export * from "./skeleton";
+export * from "./blockie-avatar";

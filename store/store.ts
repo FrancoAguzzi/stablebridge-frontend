@@ -5,17 +5,21 @@ import panelSelectorSlice from "./panelSelector";
 import accountSlice from "./accountSlice";
 import testnetsSlice from "./testnetsSlice";
 import rampInfoSlice from "./rampInfoSlice";
+import vaultInfoSlice from "./vaultInfoSlice";
 
 export default configureStore({
   reducer: {
-    // Bridge related
+    // Bridge
     originTransactionInfo: originTransactionSlice,
     destinyTransactionInfo: destinyTransactionSlice,
     panel: panelSelectorSlice,
     account: accountSlice,
     testnets: testnetsSlice,
 
-    // On Ramp related
+    // On Ramp
     rampInfo: rampInfoSlice,
+
+    // Profit
+    vaultInfo: vaultInfoSlice,
   },
 });

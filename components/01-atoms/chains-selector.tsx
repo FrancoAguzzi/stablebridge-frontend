@@ -1,14 +1,27 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useWeb3React } from "@web3-react/core";
+import { setBalance } from "../../store/accountSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { getChainInfo } from "../../constants/chainInfo";
 import { supportedChains } from "../../constants/supportedChains";
-import { setChain } from "../../store/rampInfoSlice";
+import { setChain as setRampChain } from "../../store/rampInfoSlice";
+import { setChain as setVaultChain } from "../../store/vaultInfoSlice";
+import { getSBRLAmount, InjectedConnect, switchNetwork } from "../../utils";
 
 interface ChainsSelector {
   onSelection?: () => void;
+  parent: ChainSelectorOptions;
 }
 
-export const ChainsSelector = ({ onSelection }: ChainsSelector) => {
+export enum ChainSelectorOptions {
+  VAULT = "vault",
+  ONRAMP = "onramp",
+}
+
+export const ChainsSelector = ({ onSelection, parent }: ChainsSelector) => {
+  const { activate } = useWeb3React();
+  const account = useSelector((state: any) => state.account.address);
+
   const [chainsList, setChainsList] = useState<any[]>([]);
   const dispatch = useDispatch();
 
@@ -22,9 +35,35 @@ export const ChainsSelector = ({ onSelection }: ChainsSelector) => {
     if (list.length) setChainsList([...list]);
   };
 
-  const handleChainSelection = (chainId: number) => {
-    dispatch(setChain(chainId));
-    if (onSelection) onSelection();
+  const handleChainSelection = async (chainId: number) => {
+    if (!account) {
+      try {
+        await activate(InjectedConnect);
+      } catch (e) {
+        return e;
+      }
+    }
+
+    try {
+      switchNetwork(chainId);
+
+      if (parent === ChainSelectorOptions.ONRAMP) {
+        dispatch(setRampChain(chainId));
+      } else if (parent === ChainSelectorOptions.VAULT) {
+        dispatch(setVaultChain(chainId));
+      }
+      const balance = await getSBRLAmount(chainId);
+      dispatch(setBalance(balance));
+
+      if (onSelection) onSelection();
+    } catch (e) {
+      if (parent === ChainSelectorOptions.ONRAMP) {
+        dispatch(setRampChain(""));
+      } else if (parent === ChainSelectorOptions.VAULT) {
+        dispatch(setVaultChain(""));
+      }
+      return e;
+    }
   };
 
   useEffect(() => {
