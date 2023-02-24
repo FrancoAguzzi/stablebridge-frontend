@@ -24,7 +24,7 @@ export const PixPage: NextPage = () => {
     // Contract ABI: integration needed
 
     router.push({ pathname: "/" });
-    toast.success(`You've successfully buyed ${router.query.amount} SBRLs!`);
+    toast.success(`You've buyed ${router.query.amount} SBRLs!`);
   };
 
   return (

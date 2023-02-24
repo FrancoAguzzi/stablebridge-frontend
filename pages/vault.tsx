@@ -13,17 +13,19 @@ import {
 } from "../components/01-atoms";
 import { setAmount } from "../store/vaultInfoSlice";
 import { getChainInfo } from "../constants/chainInfo";
+import { setAddress } from "../store/accountSlice";
+import { useAccount } from "wagmi";
 
 export const OnRampPage: NextPage = () => {
   const vaultAmount = useSelector((state: any) => state.vaultInfo.amount);
   const vaultChain = useSelector((state: any) => state.vaultInfo.chain);
   const vaultToken = useSelector((state: any) => state.vaultInfo.token);
   const balance = useSelector((state: any) => state.account.balance);
-  const account = useSelector((state: any) => state.account.address);
 
   const router = useRouter();
   const dispatch = useDispatch();
 
+  const { address } = useAccount();
   const [networkGas, setNetworkGas] = useState(0);
   const [stakedAmount, setStakedAmount] = useState();
   const [processingFee, setProcessingFee] = useState(0);
@@ -32,13 +34,22 @@ export const OnRampPage: NextPage = () => {
   const [isLoadingEstimates, setIsLoadingEstimates] = useState(false);
 
   useEffect(() => {
+    dispatch(setAddress(address));
+  }, [address]);
+
+  useEffect(() => {
     // VAULT API: integration needed
     // fetch staked amount and setStakedAmount()
   }, []);
 
   const handleSubmit = () => {
-    if (!account) {
+    if (!address) {
       toast.error("Connect your wallet first");
+      return;
+    }
+
+    if (!vaultChain) {
+      toast.error("Please fill in all fields to submit");
       return;
     }
 

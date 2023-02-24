@@ -15,6 +15,7 @@ import { getEstimatedGasFee } from "../utils";
 
 import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
+import { useAccount } from "wagmi";
 
 const TIMEOUT_SECONDS = 10;
 
@@ -22,9 +23,9 @@ export const OnRampPage: NextPage = () => {
   const amountValue = useSelector((state: any) => state.rampInfo.amount);
   const rampChain = useSelector((state: any) => state.rampInfo.chain);
   const rampToken = useSelector((state: any) => state.rampInfo.token);
-  const account = useSelector((state: any) => state.account.address);
   const dispatch = useDispatch();
 
+  const { address } = useAccount();
   const [processingFee, setProcessingFee] = useState(0);
   const [networkGas, setNetworkGas] = useState(0);
   const [showChainSelector, setShowChainSelector] = useState(false);
@@ -40,7 +41,7 @@ export const OnRampPage: NextPage = () => {
   };
 
   const validateOnRamp = async () => {
-    if (!!amountValue && rampChain && rampToken && account) {
+    if (!!amountValue && rampChain && rampToken) {
       // PIX API: integration needed
       // const myHeaders = new Headers();
 
@@ -62,12 +63,16 @@ export const OnRampPage: NextPage = () => {
 
       //   dispatch(setPixData(data));
       // }
-      router.push({
-        pathname: "/pix/[wallet]/[amount]",
-        query: { wallet: account, amount: amountValue },
-      });
+      if (!address) {
+        toast.error("Connect your wallet first");
+      } else {
+        router.push({
+          pathname: "/pix/[wallet]/[amount]",
+          query: { wallet: address, amount: amountValue },
+        });
+      }
     } else {
-      toast.error("Connect your account first");
+      toast.error("Please fill in all fields to submit");
     }
   };
 
