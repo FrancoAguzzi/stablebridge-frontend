@@ -35,6 +35,7 @@ export const OnRampPage: NextPage = () => {
 
   useEffect(() => {
     dispatch(setAddress(address));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address]);
 
   useEffect(() => {
