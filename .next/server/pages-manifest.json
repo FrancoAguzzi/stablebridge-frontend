@@ -1,0 +1,12 @@
+{
+  "/_app": "pages/_app.js",
+  "/_document": "pages/_document.js",
+  "/bridge": "pages/bridge.html",
+  "/": "pages/index.html",
+  "/onramp": "pages/onramp.html",
+  "/vault": "pages/vault.html",
+  "/pix/[wallet]/[amount]": "pages/pix/[wallet]/[amount].html",
+  "/_error": "pages/_error.js",
+  "/transparency": "pages/transparency.html",
+  "/404": "pages/404.html"
+}
